@@ -1,0 +1,19 @@
+.sidebar__chats {
+  flex: 1;
+
+  background: white;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: #bcc0c4;
+  }
+}

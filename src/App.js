@@ -1,26 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
+import './App.scss'
+import ChatPage from './pages/ChatPage'
+import FriendPage from './pages/FriendPage'
+import LoginPage from './pages/LoginPage'
+
+function PrivateRoute({ children, ...rest }) {
+  const user = useSelector((state) => state.user.current)
+
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        user?.access_token ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/',
+              state: { from: location },
+            }}
+          />
+        )
+      }
+    />
+  )
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <BrowserRouter>
+      <Switch>
+        <PrivateRoute path="/message">
+          <ChatPage />
+        </PrivateRoute>
+
+        <PrivateRoute path="/friend/:id">
+          <FriendPage />
+        </PrivateRoute>
+
+        <Route path="/" exact>
+          <LoginPage />
+        </Route>
+      </Switch>
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App

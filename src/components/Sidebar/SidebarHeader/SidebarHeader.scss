@@ -1,0 +1,15 @@
+.sidebar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 60px;
+  padding: 10px 16px 10px 16px;
+}
+
+.sidebar__headerActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 10vw;
+}

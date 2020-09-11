@@ -1,0 +1,35 @@
+.chat__sender {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 1rem;
+  background: #fff;
+}
+
+.chat__input {
+  display: flex;
+  align-items: center;
+  flex: 1;
+
+  & > input {
+    flex: 1;
+
+    border-radius: 20px;
+    border: 1px solid transparent;
+    outline-width: 0;
+
+    background: rgba(0, 0, 0, 0.05);
+
+    &:hover,
+    &:focus {
+      border: 1px solid transparent;
+      box-shadow: none;
+    }
+  }
+
+  & > button {
+    margin-left: 8px;
+    border: 1px solid transparent;
+  }
+}

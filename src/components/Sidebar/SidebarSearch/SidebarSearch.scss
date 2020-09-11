@@ -1,0 +1,19 @@
+.sidebar__search {
+  padding: 1.5rem;
+
+  & .ant-form-item {
+    margin-bottom: 0;
+  }
+
+  & .ant-input-affix-wrapper {
+    border: none;
+    outline-width: 0;
+    border-radius: 20px;
+    background: #ededed;
+    box-shadow: none;
+  }
+
+  & input {
+    background: #ededed;
+  }
+}
