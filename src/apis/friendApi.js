@@ -1,8 +1,8 @@
 import axiosClient from './axiosClient'
 
 const friendApi = {
-  getFriends: (id) => {
-    const url = `/friends/${id}`
+  getFriends: () => {
+    const url = `/friends`
     return axiosClient.get(url)
   },
 }

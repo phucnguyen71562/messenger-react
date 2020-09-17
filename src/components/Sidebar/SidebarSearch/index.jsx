@@ -1,11 +1,32 @@
 import { SearchOutlined } from '@ant-design/icons'
 import { Form, Input } from 'antd'
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  fetchSearchFriendResults,
+  toggleSearchFriends,
+} from '../../../slices/searchSlice'
 import './SidebarSearch.scss'
 
 function SidebarSearch() {
+  const friends = useSelector((state) => state.user.friends)
+  const dispatch = useDispatch()
+
   const onFinish = (values) => {
     console.log('Received values of form: ', values)
+  }
+
+  const handleChange = (e) => {
+    const value = e.target.value
+
+    if (value !== '') {
+      dispatch(toggleSearchFriends(true))
+
+      const data = friends.filter((friend) => friend.username.includes(value))
+      dispatch(fetchSearchFriendResults(data))
+    } else {
+      dispatch(toggleSearchFriends(false))
+    }
   }
 
   return (
@@ -14,6 +35,12 @@ function SidebarSearch() {
         <Input
           prefix={<SearchOutlined />}
           placeholder="Tìm kiếm trên Messenger"
+          onChange={handleChange}
+          onFocus={() => dispatch(toggleSearchFriends(true))}
+          onBlur={(e) =>
+            e.target.value === '' && dispatch(toggleSearchFriends(false))
+          }
+          autoComplete="off"
         />
       </Form.Item>
     </Form>

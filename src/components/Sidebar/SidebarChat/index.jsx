@@ -1,41 +1,21 @@
 import { List } from 'antd'
 import React from 'react'
+import { useSelector } from 'react-redux'
 import SidebarChatItem from '../SidebarChatItem'
 import './SidebarChat.scss'
 
-const data = [
-  {
-    title: 'Ant Design Title 1',
-  },
-  {
-    title: 'Ant Design Title 2',
-  },
-  {
-    title: 'Ant Design Title 3',
-  },
-  {
-    title: 'Ant Design Title 4',
-  },
-  {
-    title: 'Ant Design Title 4',
-  },
-  {
-    title: 'Ant Design Title 4',
-  },
-  {
-    title: 'Ant Design Title 4',
-  },
-  {
-    title: 'Ant Design Title 4',
-  },
-]
-
 function SidebarChat() {
+  const chats = useSelector((state) => state.chat.chats)
+  const isSearchFriend = useSelector((state) => state.search.isSearchFriend)
+  const searchFriendResults = useSelector(
+    (state) => state.search.searchFriendResults
+  )
+
   return (
     <List
       className="sidebar__chats"
       itemLayout="horizontal"
-      dataSource={data}
+      dataSource={!isSearchFriend ? chats : searchFriendResults}
       renderItem={(item) => <SidebarChatItem item={item} />}
     />
   )

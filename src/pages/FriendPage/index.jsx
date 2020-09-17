@@ -1,25 +1,11 @@
 import { Avatar, List } from 'antd'
-import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import friendApi from '../../apis/friendApi'
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import './FriendPage.scss'
 
 function FriendPage() {
-  const [friends, setFriends] = useState([])
-  const { id } = useParams()
-
-  useEffect(() => {
-    const fetchFriends = async () => {
-      try {
-        const data = await friendApi.getFriends(id)
-        setFriends(data)
-      } catch (e) {
-        console.log(e)
-      }
-    }
-
-    fetchFriends()
-  }, [id])
+  const friends = useSelector((state) => state.user.friends)
 
   return (
     <div className="friends">
@@ -27,13 +13,20 @@ function FriendPage() {
         <List
           itemLayout="horizontal"
           dataSource={friends}
-          renderItem={(item) => (
-            <List.Item key={item}>
+          renderItem={(friend) => (
+            <List.Item key={friend._id}>
               <List.Item.Meta
                 avatar={
                   <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
                 }
-                title={<Link to={`/message/${item}`}>{item}</Link>}
+                title={
+                  <Link
+                    to={`/messages/${friend._id}`}
+                    className="friends__title"
+                  >
+                    {friend.username}
+                  </Link>
+                }
                 description="Ant Design, a design language for background applications, is refined by Ant UED Team"
               />
             </List.Item>

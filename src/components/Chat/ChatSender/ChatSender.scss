@@ -7,12 +7,12 @@
   background: #fff;
 }
 
-.chat__input {
+.chat-form {
   display: flex;
   align-items: center;
   flex: 1;
 
-  & > input {
+  &__input {
     flex: 1;
 
     border-radius: 20px;
@@ -28,7 +28,7 @@
     }
   }
 
-  & > button {
+  &__button {
     margin-left: 8px;
     border: 1px solid transparent;
   }

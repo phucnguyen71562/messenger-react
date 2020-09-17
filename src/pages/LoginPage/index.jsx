@@ -1,9 +1,8 @@
 import { message } from 'antd'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
-import userApi from '../../apis/userApi'
-import { setUser } from '../../app/userSlice'
+import authApi from '../../apis/authApi'
+import { loginUser } from '../../app/authSlice'
 import LoginForm from '../../components/LoginForm'
 import RegistrationForm from '../../components/RegistrationForm'
 
@@ -11,21 +10,17 @@ function LoginPage() {
   const [visible, setVisible] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
-  const history = useHistory()
   const dispatch = useDispatch()
 
   const handleLoginSuccess = async (values) => {
     setSubmitting(true)
 
     try {
-      const user = await userApi.login(values)
-      dispatch(setUser(user))
-
+      await dispatch(loginUser(values))
       setSubmitting(false)
-      history.push('/message')
     } catch (e) {
       setSubmitting(false)
-      message.error('Tên đăng nhập hoặc mật khẩu không chính xác')
+      message.error(e?.response?.data?.message)
     }
   }
 
@@ -35,11 +30,11 @@ function LoginPage() {
 
   const onSignup = async (values) => {
     try {
-      const { message } = await userApi.signup(values)
+      const { message: responseMessage } = await authApi.signup(values)
       setVisible(false)
-      message.success(message)
+      message.success(responseMessage)
     } catch (e) {
-      message.error('Có lỗi xảy ra')
+      message.error(e?.response?.data?.message)
     }
   }
 

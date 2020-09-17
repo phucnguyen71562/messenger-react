@@ -1,6 +1,19 @@
 import axios from 'axios'
 import queryString from 'query-string'
-import { retrieveObjectInLocalStorage } from '../services/helpers'
+import { renewAccessToken } from '../app/authSlice'
+import store from '../app/store'
+import authApi from './authApi'
+
+let isRefreshedAccessToken = false
+let subscribers = []
+
+function onRefreshed(access_token) {
+  subscribers.map((callback) => callback(access_token))
+}
+
+function addSubscriber(callback) {
+  subscribers.push(callback)
+}
 
 const axiosClient = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
@@ -11,12 +24,14 @@ const axiosClient = axios.create({
 })
 
 axiosClient.interceptors.request.use((config) => {
-  const rememberedAccounts = retrieveObjectInLocalStorage('rememberedAccounts')
+  const {
+    auth: {
+      current: { access_token },
+    },
+  } = store.getState()
 
-  if (rememberedAccounts) {
-    const token = rememberedAccounts.access_token
-
-    config.headers.Authorization = `Bearer ${token}`
+  if (access_token) {
+    config.headers.Authorization = `Bearer ${access_token}`
   }
 
   return config
@@ -31,7 +46,49 @@ axiosClient.interceptors.response.use(
     return response
   },
   (error) => {
-    throw error
+    if (error.config && error.response && error.response.status) {
+      const statusFailed = [403]
+      const {
+        config,
+        response: { status },
+      } = error
+      const originalRequest = config
+
+      if (statusFailed.includes(status)) {
+        if (!isRefreshedAccessToken) {
+          isRefreshedAccessToken = true
+
+          const {
+            auth: {
+              current: { id, refresh_token },
+            },
+          } = store.getState()
+
+          authApi
+            .renewToken({
+              token: refresh_token,
+              id,
+            })
+            .then(({ access_token }) => {
+              isRefreshedAccessToken = false
+              onRefreshed(access_token)
+              store.dispatch(renewAccessToken(access_token))
+              subscribers = []
+            })
+        }
+
+        const retryOriginalRequest = new Promise((resolve) => {
+          addSubscriber((access_token) => {
+            originalRequest.headers.Authorization = 'Bearer ' + access_token
+            resolve(axiosClient(originalRequest))
+          })
+        })
+
+        return retryOriginalRequest
+      }
+    }
+
+    return Promise.reject(error)
   }
 )
 

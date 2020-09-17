@@ -1,12 +1,51 @@
-import { EditOutlined, SearchOutlined } from '@ant-design/icons'
-import { Avatar, Collapse, Divider, Drawer, Typography } from 'antd'
-import React from 'react'
+import { CheckOutlined } from '@ant-design/icons'
+import {
+  Avatar,
+  Button,
+  Collapse,
+  Divider,
+  Drawer,
+  Modal,
+  Typography,
+} from 'antd'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { colorThemeConfig } from '../../../app/config'
+import { getRelativeTime } from '../../../services/helpers'
+import { setColorTheme } from '../../../slices/chatSlice'
 import './Detail.scss'
 
 const { Title, Text } = Typography
 const { Panel } = Collapse
 
 function Detail({ visible, setVisible }) {
+  const onlineFriends = useSelector((state) => state.user.onlineFriends)
+  const receiver = useSelector((state) => state.chat.receiver)
+  const { name: colorName, value: colorTheme } = useSelector(
+    (state) => state.chat.colorTheme
+  )
+  const [showModal, setShowModal] = useState(false)
+  const dispatch = useDispatch()
+
+  const isOnline = onlineFriends.find((friend) => friend === receiver?._id)
+
+  const handleShowModal = () => {
+    setShowModal(true)
+  }
+
+  const handleOk = () => {
+    setShowModal(false)
+  }
+
+  const handleCancel = () => {
+    setShowModal(false)
+  }
+
+  const handleChangeColor = (params) => {
+    dispatch(setColorTheme(params))
+    setShowModal(false)
+  }
+
   return (
     <Drawer
       placement="right"
@@ -21,10 +60,12 @@ function Detail({ visible, setVisible }) {
           src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
           size={64}
         />
-        <Title level={2} bold style={{ marginTop: 16 }}>
-          John
+        <Title level={2} style={{ marginTop: 16 }}>
+          {receiver?.username}
         </Title>
-        <Text type="secondary">3 seconds ago</Text>
+        <Text type="secondary">
+          {isOnline ? 'Đang hoạt động' : getRelativeTime(receiver?.lastLogin)}
+        </Text>
       </div>
       <Divider />
       <Collapse
@@ -34,32 +75,44 @@ function Detail({ visible, setVisible }) {
         expandIconPosition="right"
       >
         <Panel header="Hành động khác" key="1">
-          <div className="detail__action">
-            <Text>Tìm kiếm trong cuộc trò chuyện</Text>
-            <SearchOutlined />
-          </div>
-          <div className="detail__action">
-            <Text>Sửa biệt danh</Text>
-            <EditOutlined />
-          </div>
-          <div className="detail__action">
+          <div className="detail__action" onClick={handleShowModal}>
             <Text>Đổi màu chủ đề</Text>
-            <EditOutlined />
+            <div className="color__label" style={colorTheme}>
+              <div className="color__dot"></div>
+            </div>
           </div>
-        </Panel>
-        <Panel header="Ảnh đã chia sẻ" key="2">
-          <div className="detail__action">
-            <Text>Tìm kiếm trong cuộc trò chuyện</Text>
-            <SearchOutlined />
-          </div>
-          <div className="detail__action">
-            <Text>Sửa biệt danh</Text>
-            <EditOutlined />
-          </div>
-          <div className="detail__action">
-            <Text>Đổi màu chủ đề</Text>
-            <EditOutlined />
-          </div>
+          <Modal
+            width={335}
+            closable={false}
+            visible={showModal}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            footer={[
+              <Button key="submit" type="link" onClick={handleCancel}>
+                Hủy
+              </Button>,
+            ]}
+          >
+            <Title level={4} className="color__title">
+              Chọn màu cho cuộc trò chuyện này
+            </Title>
+            <div className="color-box">
+              {colorThemeConfig.map((color) => {
+                return (
+                  <div
+                    key={color.name}
+                    className="color-box__item"
+                    style={color.value}
+                    onClick={() => handleChangeColor(color)}
+                  >
+                    {color.name === colorName && (
+                      <CheckOutlined style={{ color: '#fff', fontSize: 22 }} />
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </Modal>
         </Panel>
       </Collapse>
     </Drawer>

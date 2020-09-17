@@ -73,6 +73,10 @@ function RegistrationForm({ visible, onSignup, onCancel }) {
               birthday: fieldsValue['birthday'].format('YYYY-MM-DD'),
             }
             onSignup(values)
+            setValidate({
+              validateStatus: '',
+              errorMsg: null,
+            })
           })
           .catch((info) => {
             console.log('Validate Failed:', info)

@@ -1,8 +1,10 @@
 import { Avatar, Dropdown, List, Menu, Typography } from 'antd'
 import React from 'react'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import './SidebarChatItem.scss'
 
-const { Title, Paragraph } = Typography
+const { Paragraph } = Typography
 
 const menu = (
   <Menu>
@@ -18,33 +20,54 @@ const menu = (
 )
 
 function SidebarChatItem({ item }) {
-  return (
-    <List.Item
-      className="sidebar__chat"
-      actions={[
-        <Dropdown overlay={menu} trigger={['click']}>
-          <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-            ...
-          </a>
-        </Dropdown>,
-      ]}
-    >
-      <List.Item.Meta
-        avatar={
-          <Avatar
-            size="large"
-            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+  const isSearchFriend = useSelector((state) => state.search.isSearchFriend)
+
+  if (!isSearchFriend) {
+    const { receiver, chat } = item
+
+    return (
+      <Link to={`/messages/${receiver._id}`}>
+        <List.Item
+          className="sidebar__chat"
+          actions={[
+            <Dropdown overlay={menu} trigger={['click']} arrow>
+              <span>...</span>
+            </Dropdown>,
+          ]}
+        >
+          <List.Item.Meta
+            avatar={
+              <Avatar
+                size="large"
+                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+              />
+            }
+            title={receiver.username}
+            description={
+              <Paragraph ellipsis>
+                {chat.messages[chat.messages.length - 1].message}
+              </Paragraph>
+            }
           />
-        }
-        title={<Title level={4}>{item.title}</Title>}
-        description={
-          <Paragraph ellipsis>
-            Ant Design, a design language for background applications, is
-            refined by Ant UED Team
-          </Paragraph>
-        }
-      />
-    </List.Item>
+        </List.Item>
+      </Link>
+    )
+  }
+
+  return (
+    <Link to={`/messages/${item._id}`}>
+      <List.Item className="sidebar__chat">
+        <List.Item.Meta
+          avatar={
+            <Avatar
+              size="large"
+              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+            />
+          }
+          title={item.username}
+        />
+      </List.Item>
+    </Link>
   )
 }
 

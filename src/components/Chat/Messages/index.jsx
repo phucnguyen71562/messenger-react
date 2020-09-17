@@ -1,51 +1,52 @@
 import { Tooltip } from 'antd'
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import ScrollToBottom from 'react-scroll-to-bottom'
-import io from 'socket.io-client'
-import { receiveMessage } from '../../../app/messageSlice'
-import ChatSender from '../ChatSender'
+import React, { useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
+import { getTime } from '../../../services/helpers'
 import './Messages.scss'
 
-const socket = io(process.env.REACT_APP_API_URL)
-
 function Messages() {
-  const user = useSelector((state) => state.user.current)
-  const messages = useSelector((state) => state.message.messages)
-  const dispatch = useDispatch()
+  const { username } = useSelector((state) => state.auth.current)
+  const messages = useSelector((state) => state.chat.messages)
+  const colorTheme = useSelector((state) => state.chat.colorTheme)
+  const messageRef = useRef()
 
-  useEffect(() => {
-    socket.on('receive message', (message) => {
-      dispatch(receiveMessage(message))
-    })
-  }, [dispatch])
+  const scrollToBottom = () => {
+    if (messageRef.current) {
+      messageRef.current.scrollTop = messageRef.current.scrollHeight
+    }
+  }
+
+  useEffect(() => scrollToBottom(), [messages])
 
   return (
-    <>
-      <ScrollToBottom className="chat__messages">
-        {messages.map((message) => {
-          return (
-            <Tooltip
-              title={new Date(message.timestamp).toUTCString()}
-              placement="right"
+    <div className="chat__messages" ref={messageRef}>
+      {messages.map((message) => {
+        return (
+          <Tooltip
+            key={message?._id}
+            title={getTime(message?.timestamp)}
+            placement="right"
+          >
+            <div
+              className={`chat__message ${
+                username === message?.username
+                  ? 'chat__message-sender'
+                  : 'chat__message-receiver'
+              }`}
+              style={
+                username === message?.username
+                  ? { backgroundAttachment: 'fixed', ...colorTheme.value }
+                  : {}
+              }
             >
-              <div
-                key={message.timestamp}
-                className={`chat__message ${
-                  user.username === message.username
-                    ? 'chat__message-sender'
-                    : 'chat__message-receiver'
-                }`}
-              >
-                <span className="chat__messageText">{message.message}</span>
+              <div className="chat__messageText">
+                <span>{message?.message}</span>
               </div>
-            </Tooltip>
-          )
-        })}
-      </ScrollToBottom>
-
-      <ChatSender socket={socket} />
-    </>
+            </div>
+          </Tooltip>
+        )
+      })}
+    </div>
   )
 }
 
