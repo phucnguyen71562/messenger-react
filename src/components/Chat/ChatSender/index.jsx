@@ -6,7 +6,6 @@ import { useSocket } from '../../../contexts/SocketProvider'
 import './ChatSender.scss'
 
 function ChatSender() {
-  const { username } = useSelector((state) => state.auth.current)
   const receiver = useSelector((state) => state.chat.receiver)
   const [message, setMessage] = useState('')
   const socket = useSocket()
@@ -20,9 +19,8 @@ function ChatSender() {
     e.preventDefault()
 
     socket.emit('send-message', {
-      username,
       message,
-      receiverId: receiver?._id,
+      receiverId: receiver._id,
     })
 
     setMessage('')

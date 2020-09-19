@@ -10,7 +10,8 @@ import {
 } from 'antd'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { colorThemeConfig } from '../../../app/config'
+import { AVATAR_DEFAULT, colorThemeConfig } from '../../../app/config'
+import { useSocket } from '../../../contexts/SocketProvider'
 import { getRelativeTime } from '../../../services/helpers'
 import { setColorTheme } from '../../../slices/chatSlice'
 import './Detail.scss'
@@ -19,15 +20,16 @@ const { Title, Text } = Typography
 const { Panel } = Collapse
 
 function Detail({ visible, setVisible }) {
-  const onlineFriends = useSelector((state) => state.user.onlineFriends)
+  const onlineFriends = useSelector((state) => state.friend.onlineFriends)
   const receiver = useSelector((state) => state.chat.receiver)
   const { name: colorName, value: colorTheme } = useSelector(
     (state) => state.chat.colorTheme
   )
   const [showModal, setShowModal] = useState(false)
   const dispatch = useDispatch()
+  const socket = useSocket()
 
-  const isOnline = onlineFriends.find((friend) => friend === receiver?._id)
+  const isOnline = onlineFriends.includes(receiver?._id)
 
   const handleShowModal = () => {
     setShowModal(true)
@@ -43,6 +45,10 @@ function Detail({ visible, setVisible }) {
 
   const handleChangeColor = (params) => {
     dispatch(setColorTheme(params))
+    socket.emit('change-color', {
+      color: params,
+      receiverId: receiver._id,
+    })
     setShowModal(false)
   }
 
@@ -56,15 +62,14 @@ function Detail({ visible, setVisible }) {
       bodyStyle={{ padding: 8 }}
     >
       <div className="detail__title">
-        <Avatar
-          src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-          size={64}
-        />
+        <Avatar icon={AVATAR_DEFAULT} src={receiver.photoUrl} size={64} />
         <Title level={2} style={{ marginTop: 16 }}>
           {receiver?.username}
         </Title>
         <Text type="secondary">
-          {isOnline ? 'Đang hoạt động' : getRelativeTime(receiver?.lastLogin)}
+          {isOnline
+            ? 'Đang hoạt động'
+            : receiver && getRelativeTime(receiver.lastLogin)}
         </Text>
       </div>
       <Divider />

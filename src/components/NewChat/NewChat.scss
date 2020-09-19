@@ -1,0 +1,43 @@
+.newChat {
+  display: flex;
+  flex-direction: column;
+  flex: 0.7;
+  border-left: 1px solid #eee;
+}
+
+.newChat__header {
+  display: flex;
+  align-items: center;
+
+  height: 60px;
+  padding: 0.5rem;
+  padding-left: 1rem;
+  border-bottom: 1px solid #eee;
+
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+}
+
+.newChat__input {
+  flex: 1;
+  margin-left: 5px;
+
+  & > .ant-select-selector {
+    outline-width: 0;
+    border: 1px solid transparent !important;
+    box-shadow: none !important;
+  }
+}
+
+.newChat__body {
+  flex: 1;
+  background: #fff;
+}
+
+.newChat__link {
+  color: #333;
+  text-transform: capitalize;
+
+  & > span {
+    margin-left: 10px;
+  }
+}

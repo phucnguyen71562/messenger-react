@@ -5,8 +5,6 @@ const userSlice = createSlice({
   initialState: {
     users: [],
     user: {},
-    friends: [],
-    onlineFriends: [],
   },
   reducers: {
     fetchUsers: (state, action) => {
@@ -16,24 +14,11 @@ const userSlice = createSlice({
     fetchUser: (state, action) => {
       state.user = action.payload
     },
-
-    fetchFriends: (state, action) => {
-      state.friends = action.payload
-    },
-
-    fetchOnlineFriends: (state, action) => {
-      state.onlineFriends = action.payload
-    },
   },
   extraReducers: {},
 })
 
 const { reducer, actions } = userSlice
 
-export const {
-  fetchUsers,
-  fetchUser,
-  fetchFriends,
-  fetchOnlineFriends,
-} = actions
+export const { fetchUsers, fetchUser } = actions
 export default reducer

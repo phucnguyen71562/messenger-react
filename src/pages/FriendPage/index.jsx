@@ -2,10 +2,11 @@ import { Avatar, List } from 'antd'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { AVATAR_DEFAULT } from '../../app/config'
 import './FriendPage.scss'
 
 function FriendPage() {
-  const friends = useSelector((state) => state.user.friends)
+  const friends = useSelector((state) => state.friend.friends)
 
   return (
     <div className="friends">
@@ -16,9 +17,7 @@ function FriendPage() {
           renderItem={(friend) => (
             <List.Item key={friend._id}>
               <List.Item.Meta
-                avatar={
-                  <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                }
+                avatar={<Avatar icon={AVATAR_DEFAULT} src={friend.photoUrl} />}
                 title={
                   <Link
                     to={`/messages/${friend._id}`}

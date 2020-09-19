@@ -6,9 +6,14 @@ const chatApi = {
     return axiosClient.get(url)
   },
 
-  receiveMessage: (params) => {
+  fetchMessages: (params) => {
     const url = `/chats/${params}`
     return axiosClient.get(url)
+  },
+
+  deleteChat: (params) => {
+    const url = `/chats/${params}`
+    return axiosClient.delete(url)
   },
 }
 

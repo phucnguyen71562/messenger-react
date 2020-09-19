@@ -9,12 +9,8 @@ import {
 import './SidebarSearch.scss'
 
 function SidebarSearch() {
-  const friends = useSelector((state) => state.user.friends)
+  const friends = useSelector((state) => state.friend.friends)
   const dispatch = useDispatch()
-
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values)
-  }
 
   const handleChange = (e) => {
     const value = e.target.value
@@ -30,7 +26,7 @@ function SidebarSearch() {
   }
 
   return (
-    <Form name="search" onFinish={onFinish} className="sidebar__search">
+    <Form name="search" className="sidebar__search">
       <Form.Item name="search">
         <Input
           prefix={<SearchOutlined />}

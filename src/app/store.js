@@ -10,6 +10,7 @@ import {
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import chatReducer from '../slices/chatSlice'
+import friendReducer from '../slices/friendSlice'
 import searchReducer from '../slices/searchSlice'
 import userReducer from '../slices/userSlice'
 import authReducer from './authSlice'
@@ -19,17 +20,12 @@ const authConfig = {
   storage,
 }
 
-const chatConfig = {
-  key: 'chatSettings',
-  storage,
-  whitelist: ['colorTheme'],
-}
-
 const rootReducer = {
-  auth: persistReducer(authConfig, authReducer),
-  chat: persistReducer(chatConfig, chatReducer),
+  chat: chatReducer,
+  friend: friendReducer,
   search: searchReducer,
   user: userReducer,
+  auth: persistReducer(authConfig, authReducer),
 }
 
 const store = configureStore({

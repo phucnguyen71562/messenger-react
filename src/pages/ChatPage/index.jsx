@@ -1,28 +1,16 @@
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { Route, Switch, useRouteMatch } from 'react-router-dom'
 import chatApi from '../../apis/chatApi'
-import Chat from '../../components/Chat'
+import NewChat from '../../components/NewChat'
 import Sidebar from '../../components/Sidebar'
-import { useSocket } from '../../contexts/SocketProvider'
-import {
-  fetchChats,
-  fetchMessages,
-  receiveMessage,
-  setReceiver,
-} from '../../slices/chatSlice'
+import { fetchChats } from '../../slices/chatSlice'
+import MessagePage from '../MessagePage'
 import './ChatPage.scss'
 
 function ChatPage() {
-  const friends = useSelector((state) => state.user.friends)
-  const { id } = useParams()
+  const match = useRouteMatch()
   const dispatch = useDispatch()
-  const socket = useSocket()
-
-  useEffect(() => {
-    const receiver = friends.find((friend) => friend._id === id)
-    dispatch(setReceiver(receiver))
-  }, [dispatch, friends, id])
 
   useEffect(() => {
     const getChats = async () => {
@@ -37,39 +25,19 @@ function ChatPage() {
     getChats()
   }, [dispatch])
 
-  useEffect(() => {
-    const getMessages = async () => {
-      try {
-        const data = await chatApi.receiveMessage(id)
-        dispatch(fetchMessages(data))
-      } catch (e) {
-        console.log(e)
-      }
-    }
-
-    getMessages()
-  }, [dispatch, id])
-
-  useEffect(() => {
-    if (socket == null) return
-
-    socket.on('receive-message', (message) => {
-      dispatch(receiveMessage(message))
-    })
-
-    return () => socket.off('receive-message')
-  }, [dispatch, socket])
-
-  useEffect(() => {
-    if (socket == null) return
-
-    socket.emit('create-chat', id)
-  }, [dispatch, id, socket])
-
   return (
     <div className="container">
       <Sidebar />
-      <Chat />
+
+      <Switch>
+        <Route path={`${match.url}/new`}>
+          <NewChat />
+        </Route>
+
+        <Route path={`${match.url}/:id`}>
+          <MessagePage />
+        </Route>
+      </Switch>
     </div>
   )
 }

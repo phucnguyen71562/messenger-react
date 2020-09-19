@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import friendApi from '../../apis/friendApi'
 import NotFound from '../../components/NotFound'
 import { useSocket } from '../../contexts/SocketProvider'
-import { fetchFriends, fetchOnlineFriends } from '../../slices/userSlice'
+import {
+  addOnlineFriends,
+  fetchFriends,
+  removeOnlineFriends,
+} from '../../slices/friendSlice'
 import ChatPage from '../ChatPage'
 import FriendPage from '../FriendPage'
 
@@ -15,12 +18,7 @@ function HomePage() {
   useEffect(() => {
     const getFriends = async () => {
       try {
-        const data = await friendApi.getFriends()
-        const onlineFriends = data
-          .filter((friend) => friend.isOnline === true)
-          .map((friend) => friend._id)
-        dispatch(fetchFriends(data))
-        dispatch(fetchOnlineFriends(onlineFriends))
+        await dispatch(fetchFriends())
       } catch (e) {
         console.log(e)
       }
@@ -32,15 +30,23 @@ function HomePage() {
   useEffect(() => {
     if (socket == null) return
 
-    socket.on('is-online', (online) => {
-      dispatch(fetchOnlineFriends(online))
+    socket.on('is-online', (id) => {
+      dispatch(addOnlineFriends(id))
+    })
+  }, [dispatch, socket])
+
+  useEffect(() => {
+    if (socket == null) return
+
+    socket.on('is-offline', (id) => {
+      dispatch(removeOnlineFriends(id))
     })
   }, [dispatch, socket])
 
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/messages/:id">
+        <Route path="/messages">
           <ChatPage />
         </Route>
 

@@ -1,56 +1,84 @@
-import { Avatar, Dropdown, List, Menu, Typography } from 'antd'
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Avatar, Dropdown, List, Menu, Modal, Typography } from 'antd'
+import React, { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useHistory } from 'react-router-dom'
+import chatApi from '../../../apis/chatApi'
+import { AVATAR_DEFAULT } from '../../../app/config'
+import { deleteChat } from '../../../slices/chatSlice'
 import './SidebarChatItem.scss'
 
 const { Paragraph } = Typography
-
-const menu = (
-  <Menu>
-    <Menu.Item key="0">
-      <a href="http://www.alipay.com/">1st menu item</a>
-    </Menu.Item>
-    <Menu.Item key="1">
-      <a href="http://www.taobao.com/">2nd menu item</a>
-    </Menu.Item>
-    <Menu.Divider />
-    <Menu.Item key="3">3rd menu item</Menu.Item>
-  </Menu>
-)
+const { confirm } = Modal
 
 function SidebarChatItem({ item }) {
+  const chatReceiver = useSelector((state) => state.chat.receiver)
   const isSearchFriend = useSelector((state) => state.search.isSearchFriend)
+  const dispatch = useDispatch()
+  const history = useHistory()
+
+  const showDeleteConfirm = useCallback(
+    (value) => {
+      confirm({
+        title: 'Xóa cuộc trò chuyện này?',
+        content: 'Hành động này sẽ xóa vĩnh viễn cuộc trò chuyện',
+        okText: 'Xóa',
+        okType: 'link',
+        cancelText: 'Hủy',
+        okButtonProps: { danger: true },
+        cancelButtonProps: { type: 'link', style: { color: '#333' } },
+        onOk() {
+          chatApi.deleteChat(value)
+          dispatch(deleteChat(value))
+          if (chatReceiver._id === value) {
+            history.push('/messages')
+          }
+        },
+        onCancel() {},
+      })
+    },
+    [chatReceiver._id, dispatch, history]
+  )
 
   if (!isSearchFriend) {
     const { receiver, chat } = item
 
     return (
-      <Link to={`/messages/${receiver._id}`}>
-        <List.Item
-          className="sidebar__chat"
-          actions={[
-            <Dropdown overlay={menu} trigger={['click']} arrow>
-              <span>...</span>
-            </Dropdown>,
-          ]}
-        >
+      <List.Item
+        className="sidebar__chat"
+        actions={[
+          <Dropdown
+            overlay={
+              <Menu>
+                <Menu.Item
+                  key="0"
+                  onClick={() => showDeleteConfirm(receiver._id)}
+                >
+                  Xóa
+                </Menu.Item>
+              </Menu>
+            }
+            trigger={['click']}
+            arrow
+            placement="bottomCenter"
+          >
+            <span>...</span>
+          </Dropdown>,
+        ]}
+      >
+        <Link to={`/messages/${receiver._id}`} style={{ width: '100%' }}>
           <List.Item.Meta
             avatar={
               <Avatar
                 size="large"
-                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                icon={AVATAR_DEFAULT}
+                src={receiver.photoUrl}
               />
             }
             title={receiver.username}
-            description={
-              <Paragraph ellipsis>
-                {chat.messages[chat.messages.length - 1].message}
-              </Paragraph>
-            }
+            description={<Paragraph ellipsis>{chat.message}</Paragraph>}
           />
-        </List.Item>
-      </Link>
+        </Link>
+      </List.Item>
     )
   }
 
@@ -59,10 +87,7 @@ function SidebarChatItem({ item }) {
       <List.Item className="sidebar__chat">
         <List.Item.Meta
           avatar={
-            <Avatar
-              size="large"
-              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-            />
+            <Avatar size="large" icon={AVATAR_DEFAULT} src={item.photoUrl} />
           }
           title={item.username}
         />
