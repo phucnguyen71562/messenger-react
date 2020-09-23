@@ -1,5 +1,5 @@
 .sidebar__search {
-  padding: 1.5rem;
+  padding: 1rem;
 
   & .ant-form-item {
     margin-bottom: 0;
@@ -15,5 +15,9 @@
 
   & input {
     background: #ededed;
+  }
+
+  @media screen and (min-width: 991px) {
+    padding: 1.5rem;
   }
 }

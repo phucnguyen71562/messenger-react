@@ -14,6 +14,7 @@ import friendReducer from '../slices/friendSlice'
 import searchReducer from '../slices/searchSlice'
 import userReducer from '../slices/userSlice'
 import authReducer from './authSlice'
+import commonReducer from './commonSlice'
 
 const authConfig = {
   key: 'rememberedAccounts',
@@ -26,6 +27,7 @@ const rootReducer = {
   search: searchReducer,
   user: userReducer,
   auth: persistReducer(authConfig, authReducer),
+  common: commonReducer,
 }
 
 const store = configureStore({

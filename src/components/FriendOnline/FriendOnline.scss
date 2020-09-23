@@ -1,0 +1,17 @@
+.friends__online {
+  display: flex;
+  flex-direction: column;
+}
+
+.friends__onlineWrapper {
+  overflow-y: auto;
+}
+
+.friends__onlineStatus {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background-color: #52c41a;
+}

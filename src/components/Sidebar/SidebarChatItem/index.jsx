@@ -1,4 +1,5 @@
-import { Avatar, Dropdown, List, Menu, Modal, Typography } from 'antd'
+import { CloseCircleOutlined, EllipsisOutlined } from '@ant-design/icons'
+import { Avatar, Button, Dropdown, List, Menu, Modal, Typography } from 'antd'
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
@@ -13,6 +14,8 @@ const { confirm } = Modal
 function SidebarChatItem({ item }) {
   const chatReceiver = useSelector((state) => state.chat.receiver)
   const isSearchFriend = useSelector((state) => state.search.isSearchFriend)
+  const isDesktopMode = useSelector((state) => state.common.isDesktopMode)
+
   const dispatch = useDispatch()
   const history = useHistory()
 
@@ -20,7 +23,9 @@ function SidebarChatItem({ item }) {
     (value) => {
       confirm({
         title: 'Xóa cuộc trò chuyện này?',
+        icon: <CloseCircleOutlined style={{ color: '#ff4d4f' }} />,
         content: 'Hành động này sẽ xóa vĩnh viễn cuộc trò chuyện',
+        centered: isDesktopMode,
         okText: 'Xóa',
         okType: 'link',
         cancelText: 'Hủy',
@@ -36,7 +41,7 @@ function SidebarChatItem({ item }) {
         onCancel() {},
       })
     },
-    [chatReceiver._id, dispatch, history]
+    [chatReceiver._id, dispatch, history, isDesktopMode]
   )
 
   if (!isSearchFriend) {
@@ -61,11 +66,14 @@ function SidebarChatItem({ item }) {
             arrow
             placement="bottomCenter"
           >
-            <span>...</span>
+            <Button
+              type="link"
+              icon={<EllipsisOutlined style={{ color: '#333' }} />}
+            ></Button>
           </Dropdown>,
         ]}
       >
-        <Link to={`/messages/${receiver._id}`} style={{ width: '100%' }}>
+        <Link to={`/messages/${receiver._id}`} style={{ flex: 1 }}>
           <List.Item.Meta
             avatar={
               <Avatar

@@ -1,0 +1,12 @@
+.friends__search {
+  display: flex;
+  flex-direction: column;
+
+  &Input {
+    border-radius: 999px;
+  }
+
+  &List {
+    margin-top: 24px;
+  }
+}

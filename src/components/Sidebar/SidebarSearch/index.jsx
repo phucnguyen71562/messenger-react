@@ -18,7 +18,10 @@ function SidebarSearch() {
     if (value !== '') {
       dispatch(toggleSearchFriends(true))
 
-      const data = friends.filter((friend) => friend.username.includes(value))
+      const data = friends.filter(
+        (friend) =>
+          friend.username.toLowerCase().indexOf(value.toLowerCase()) > -1
+      )
       dispatch(fetchSearchFriendResults(data))
     } else {
       dispatch(toggleSearchFriends(false))

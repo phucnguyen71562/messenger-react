@@ -19,6 +19,14 @@ const authSlice = createSlice({
     renewAccessToken: (state, action) => {
       state.current.access_token = action.payload
     },
+
+    fetchCurrent: (state, action) => {
+      state.current = { ...state.current, ...action.payload }
+    },
+
+    updatePhotoUrl: (state, action) => {
+      state.current.photoUrl = action.payload
+    },
   },
   extraReducers: {
     [loginUser.fulfilled]: (state, action) => {
@@ -33,5 +41,5 @@ const authSlice = createSlice({
 
 const { reducer, actions } = authSlice
 
-export const { renewAccessToken } = actions
+export const { renewAccessToken, fetchCurrent, updatePhotoUrl } = actions
 export default reducer

@@ -1,6 +1,6 @@
 import { DatePicker, Form, Input, Modal, Radio } from 'antd'
 import React, { useState } from 'react'
-import userApi from '../../apis/userApi'
+import authApi from '../../apis/authApi'
 import './RegistrationForm.scss'
 
 const formItemLayout = {
@@ -23,7 +23,7 @@ const formItemLayout = {
 }
 
 const validateUsername = async (value) => {
-  const { isAvailable } = await userApi.validateUsernameAvailability(value)
+  const { isAvailable } = await authApi.validateUsernameAvailability(value)
 
   if (isAvailable) {
     return {

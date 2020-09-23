@@ -16,6 +16,10 @@ const friendSlice = createSlice({
     onlineFriends: [],
   },
   reducers: {
+    addFriend: (state, action) => {
+      state.friends.push(action.payload)
+    },
+
     addOnlineFriends: (state, action) => {
       if (!state.onlineFriends.includes(action.payload)) {
         state.onlineFriends.push(action.payload)
@@ -48,5 +52,5 @@ const friendSlice = createSlice({
 
 const { reducer, actions } = friendSlice
 
-export const { addOnlineFriends, removeOnlineFriends } = actions
+export const { addFriend, addOnlineFriends, removeOnlineFriends } = actions
 export default reducer

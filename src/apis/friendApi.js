@@ -6,6 +6,11 @@ const friendApi = {
     return axiosClient.get(url)
   },
 
+  fetchFriendRequests: () => {
+    const url = `/friends/requests`
+    return axiosClient.get(url)
+  },
+
   addFriend: (params) => {
     const url = `/friends`
     return axiosClient.post(url, { params })
@@ -13,6 +18,11 @@ const friendApi = {
 
   deleteFriend: (params) => {
     const url = `/friends/${params}`
+    return axiosClient.delete(url)
+  },
+
+  deleteFriendRequest: (params) => {
+    const url = `/friends/requests/${params}`
     return axiosClient.delete(url)
   },
 }

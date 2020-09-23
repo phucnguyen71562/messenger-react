@@ -1,36 +1,119 @@
-import { Avatar, List } from 'antd'
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { AVATAR_DEFAULT } from '../../app/config'
+import { Divider, Tabs } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import friendApi from '../../apis/friendApi'
+import userApi from '../../apis/userApi'
+import FriendHeader from '../../components/FriendHeader'
+import FriendList from '../../components/FriendList'
+import FriendOnline from '../../components/FriendOnline'
+import FriendRequest from '../../components/FriendRequest'
+import FriendSearch from '../../components/FriendSearch'
+import { useSocket } from '../../contexts/SocketProvider'
+import { addFriend } from '../../slices/friendSlice'
 import './FriendPage.scss'
 
+const { TabPane } = Tabs
+
 function FriendPage() {
-  const friends = useSelector((state) => state.friend.friends)
+  const [searchData, setSearchData] = useState([])
+  const [friendRequests, setFriendRequests] = useState([])
+  const [deleteFriends, setDeleteFriends] = useState([])
+  const [createRequests, setCreateRequests] = useState([])
+  const [acceptRequests, setAcceptRequests] = useState([])
+  const [refuseRequests, setRefuseRequests] = useState([])
+
+  const dispatch = useDispatch()
+  const socket = useSocket()
+
+  useEffect(() => {
+    const getFriendRequests = async () => {
+      try {
+        const data = await friendApi.fetchFriendRequests()
+        setFriendRequests(data)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    getFriendRequests()
+  }, [dispatch])
+
+  useEffect(() => {
+    if (socket == null) return
+
+    socket.on('new-friend-request', (request) => {
+      if (request) {
+        setFriendRequests([...friendRequests, request])
+      }
+    })
+  }, [dispatch, friendRequests, socket])
+
+  const handleSearch = async (params) => {
+    const result = await userApi.fetchUsers(params)
+    setSearchData(result)
+  }
+
+  const handleAddFriend = async (id) => {
+    const data = await friendApi.addFriend(id)
+    dispatch(addFriend(data))
+    setAcceptRequests([...acceptRequests, id])
+  }
+
+  const handleDeleteFriend = async (id) => {
+    await friendApi.deleteFriend(id)
+    setDeleteFriends([...deleteFriends, id])
+  }
+
+  const handleCreateFriendRequest = (id) => {
+    if (socket == null) return
+
+    if (id) {
+      socket.emit('add-friend', id)
+      setCreateRequests([...createRequests, id])
+    }
+  }
+
+  const handleDeleteFriendRequest = async (id) => {
+    await friendApi.deleteFriendRequest(id)
+    setRefuseRequests([...acceptRequests, id])
+  }
 
   return (
     <div className="friends">
       <div className="friends-container">
-        <List
-          itemLayout="horizontal"
-          dataSource={friends}
-          renderItem={(friend) => (
-            <List.Item key={friend._id}>
-              <List.Item.Meta
-                avatar={<Avatar icon={AVATAR_DEFAULT} src={friend.photoUrl} />}
-                title={
-                  <Link
-                    to={`/messages/${friend._id}`}
-                    className="friends__title"
-                  >
-                    {friend.username}
-                  </Link>
-                }
-                description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-              />
-            </List.Item>
-          )}
-        />
+        <FriendHeader />
+
+        <div className="friends__content">
+          <div className="friends__body">
+            <Tabs defaultActiveKey="1" centered animated>
+              <TabPane tab="Danh sách bạn bè" key="1">
+                <FriendList
+                  deleteFriends={deleteFriends}
+                  handleDeleteFriend={handleDeleteFriend}
+                />
+              </TabPane>
+              <TabPane tab="Tìm kiếm bạn bè" key="2">
+                <FriendSearch
+                  searchData={searchData}
+                  handleSearch={handleSearch}
+                  createRequests={createRequests}
+                  handleCreateFriendRequest={handleCreateFriendRequest}
+                />
+              </TabPane>
+            </Tabs>
+          </div>
+          <div className="friends__sidebar">
+            <FriendRequest
+              friendRequests={friendRequests}
+              acceptRequests={acceptRequests}
+              refuseRequests={refuseRequests}
+              handleAddFriend={handleAddFriend}
+              handleDeleteFriendRequest={handleDeleteFriendRequest}
+            />
+            <Divider />
+            <FriendOnline />
+          </div>
+        </div>
       </div>
     </div>
   )

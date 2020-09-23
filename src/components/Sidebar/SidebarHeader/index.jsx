@@ -1,31 +1,16 @@
-import { FormOutlined, LogoutOutlined } from '@ant-design/icons'
+import { FormOutlined } from '@ant-design/icons'
 import { Avatar, Button, Space, Typography } from 'antd'
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link, useHistory } from 'react-router-dom'
-import { logoutUser } from '../../../app/authSlice'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { AVATAR_DEFAULT } from '../../../app/config'
+import LogoutButton from '../../LogoutButton'
 import './SidebarHeader.scss'
 
 const { Title } = Typography
 
 function SidebarHeader() {
-  const { id, refresh_token, photoUrl } = useSelector(
-    (state) => state.auth.current
-  )
-  const history = useHistory()
-  const dispatch = useDispatch()
-
-  const handleLogout = async () => {
-    await dispatch(
-      logoutUser({
-        id,
-        token: refresh_token,
-      })
-    )
-
-    history.push('/')
-  }
+  const { photoUrl } = useSelector((state) => state.auth.current)
 
   return (
     <div className="sidebar__header">
@@ -47,12 +32,7 @@ function SidebarHeader() {
           ></Button>
         </Link>
 
-        <Button
-          shape="circle"
-          icon={<LogoutOutlined />}
-          title="Đăng xuất"
-          onClick={handleLogout}
-        ></Button>
+        <LogoutButton />
       </Space>
     </div>
   )

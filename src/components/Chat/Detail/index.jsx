@@ -67,9 +67,7 @@ function Detail({ visible, setVisible }) {
           {receiver?.username}
         </Title>
         <Text type="secondary">
-          {isOnline
-            ? 'Đang hoạt động'
-            : receiver && getRelativeTime(receiver.lastLogin)}
+          {isOnline ? 'Đang hoạt động' : getRelativeTime(receiver?.lastLogin)}
         </Text>
       </div>
       <Divider />

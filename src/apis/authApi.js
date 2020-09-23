@@ -1,6 +1,11 @@
 import axiosClient from './axiosClient'
 
 const authApi = {
+  fetchCurrent: () => {
+    const url = '/auth'
+    return axiosClient.get(url)
+  },
+
   login: (params) => {
     const url = '/auth/login'
     return axiosClient.post(url, { params })
