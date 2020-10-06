@@ -1,0 +1,21 @@
+.friends__online {
+  display: none;
+
+  @media screen and (min-width: 991px) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &Wrapper {
+    overflow-y: auto;
+  }
+
+  &Status {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    border-radius: 50%;
+    background-color: #52c41a;
+  }
+}

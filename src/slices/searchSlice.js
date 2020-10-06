@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 const searchSlice = createSlice({
   name: 'search',
@@ -8,17 +8,23 @@ const searchSlice = createSlice({
   },
   reducers: {
     toggleSearchFriends: (state, action) => {
-      state.isSearchFriend = action.payload
+      state.isSearchFriend = action.payload;
     },
 
     fetchSearchFriendResults: (state, action) => {
-      state.searchFriendResults = action.payload
+      state.searchFriendResults = action.payload;
     },
   },
   extraReducers: {},
-})
+});
 
-const { reducer, actions } = searchSlice
+const { reducer, actions } = searchSlice;
 
-export const { toggleSearchFriends, fetchSearchFriendResults } = actions
-export default reducer
+export const { toggleSearchFriends, fetchSearchFriendResults } = actions;
+
+export const selectIsSearchFriend = (state) => state.search.isSearchFriend;
+
+export const selectSearchFriendResults = (state) =>
+  state.search.searchFriendResults;
+
+export default reducer;

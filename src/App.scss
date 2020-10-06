@@ -1,4 +1,13 @@
 @import '~antd/dist/antd.css';
+@import '~emoji-mart/css/emoji-mart.css';
+@import './assets/css/variable';
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 
 .ant-typography h5,
 h5.ant-typography {
@@ -11,4 +20,12 @@ h5.ant-typography {
 
 .text-capitalize {
   text-transform: capitalize;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+
+.text-center {
+  text-align: center;
 }

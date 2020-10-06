@@ -1,0 +1,40 @@
+.chat-friendOnline {
+  display: flex;
+  padding: 0 0.5rem;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 75px;
+
+    margin-right: 5px;
+  }
+
+  &__avatar {
+    position: relative;
+  }
+
+  &__online {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: limegreen;
+    border-radius: 50%;
+    bottom: 2px;
+    right: 2px;
+  }
+
+  &__name {
+    font-size: 13px;
+    letter-spacing: -0.5px;
+  }
+}

@@ -1,14 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import authApi from '../apis/authApi'
-
-export const loginUser = createAsyncThunk('user/login', async (params) => {
-  const user = await authApi.login(params)
-  return user
-})
-
-export const logoutUser = createAsyncThunk('user/logout', async (params) => {
-  await authApi.logout(params)
-})
+import { createSlice } from '@reduxjs/toolkit';
 
 const authSlice = createSlice({
   name: 'auth',
@@ -16,30 +6,39 @@ const authSlice = createSlice({
     current: {},
   },
   reducers: {
+    loginUser: (state, action) => {
+      state.current = action.payload;
+    },
+
     renewAccessToken: (state, action) => {
-      state.current.access_token = action.payload
+      state.current.access_token = action.payload;
     },
 
     fetchCurrent: (state, action) => {
-      state.current = { ...state.current, ...action.payload }
+      state.current = { ...state.current, ...action.payload };
     },
 
     updatePhotoUrl: (state, action) => {
-      state.current.photoUrl = action.payload
+      state.current.photoUrl = action.payload;
+    },
+
+    logoutUser: (state) => {
+      state.current = {};
     },
   },
-  extraReducers: {
-    [loginUser.fulfilled]: (state, action) => {
-      state.current = action.payload
-    },
+  extraReducers: {},
+});
 
-    [logoutUser.fulfilled]: (state, action) => {
-      state.current = {}
-    },
-  },
-})
+const { reducer, actions } = authSlice;
 
-const { reducer, actions } = authSlice
+export const {
+  loginUser,
+  renewAccessToken,
+  fetchCurrent,
+  updatePhotoUrl,
+  logoutUser,
+} = actions;
 
-export const { renewAccessToken, fetchCurrent, updatePhotoUrl } = actions
-export default reducer
+export const selectCurrent = (state) => state.auth.current;
+
+export default reducer;

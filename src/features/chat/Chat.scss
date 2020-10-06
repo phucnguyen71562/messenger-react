@@ -1,0 +1,17 @@
+.chat {
+  display: flex;
+  height: 100vh;
+  background: #fff;
+  overflow: hidden;
+}
+
+.chat__sidebar {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+
+  @media screen and (min-width: 991px) {
+    flex: 0.3;
+  }
+}

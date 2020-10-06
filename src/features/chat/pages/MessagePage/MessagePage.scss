@@ -1,0 +1,10 @@
+.message {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  border-left: 1px solid #eee;
+
+  @media screen and (min-width: 991px) {
+    flex: 0.7;
+  }
+}

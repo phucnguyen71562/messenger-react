@@ -1,10 +1,10 @@
-import { ArrowLeftOutlined, FrownTwoTone } from '@ant-design/icons'
-import { Button, Typography } from 'antd'
-import React from 'react'
-import { Link } from 'react-router-dom'
-import './NotFound.scss'
+import { ArrowLeftOutlined, FrownTwoTone } from '@ant-design/icons';
+import { Button, Typography } from 'antd';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './NotFound.scss';
 
-const { Title } = Typography
+const { Title } = Typography;
 
 function NotFound() {
   return (
@@ -21,7 +21,7 @@ function NotFound() {
         </Link>
       </div>
     </div>
-  )
+  );
 }
 
-export default NotFound
+export default NotFound;

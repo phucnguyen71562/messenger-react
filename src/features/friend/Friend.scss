@@ -1,0 +1,48 @@
+.friends {
+  display: flex;
+  min-height: 100vh;
+
+  background: #f2f2f2;
+}
+
+.friends-container {
+  position: relative;
+  display: flex;
+
+  padding: 15px;
+  margin: auto;
+  padding-top: 100px;
+  margin-top: 64px;
+  margin-bottom: 30px;
+
+  width: 90vw;
+  min-height: 90vh;
+
+  background: #fff;
+}
+
+.friends__content {
+  flex: 1;
+
+  @media screen and (min-width: 991px) {
+    display: flex;
+  }
+}
+
+.friends__sidebar {
+  flex: 1;
+
+  @media screen and (min-width: 991px) {
+    flex: 0.3;
+    padding-right: 10px;
+  }
+}
+
+.friends__body {
+  flex: 1;
+
+  @media screen and (min-width: 991px) {
+    flex: 0.7;
+    padding-left: 10px;
+  }
+}

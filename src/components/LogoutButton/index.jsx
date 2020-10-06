@@ -1,25 +1,28 @@
-import { LogoutOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
-import { logoutUser } from '../../app/authSlice'
+import { LogoutOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
+import authApi from 'apis/authApi';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { logoutUser } from '../../app/authSlice';
 
 function LogoutButton(props) {
-  const { refresh_token } = useSelector((state) => state.auth.current)
+  const { id } = useSelector((state) => state.auth.current);
 
-  const dispatch = useDispatch()
-  const history = useHistory()
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleLogout = async () => {
-    dispatch(
-      logoutUser({
-        token: refresh_token,
-      })
-    )
+    const params = {
+      id,
+    };
 
-    history.push('/')
-  }
+    await authApi.logout(params);
+
+    dispatch(logoutUser(params));
+
+    history.push('/');
+  };
 
   return (
     <Button
@@ -29,7 +32,7 @@ function LogoutButton(props) {
       onClick={handleLogout}
       {...props}
     />
-  )
+  );
 }
 
-export default LogoutButton
+export default LogoutButton;

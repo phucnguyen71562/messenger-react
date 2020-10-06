@@ -1,4 +1,4 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import {
   FLUSH,
   PAUSE,
@@ -7,19 +7,19 @@ import {
   PURGE,
   REGISTER,
   REHYDRATE,
-} from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
-import chatReducer from '../slices/chatSlice'
-import friendReducer from '../slices/friendSlice'
-import searchReducer from '../slices/searchSlice'
-import userReducer from '../slices/userSlice'
-import authReducer from './authSlice'
-import commonReducer from './commonSlice'
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import chatReducer from '../features/chat/chatSlice';
+import friendReducer from '../features/friend/friendSlice';
+import searchReducer from '../slices/searchSlice';
+import userReducer from '../slices/userSlice';
+import authReducer from './authSlice';
+import commonReducer from './commonSlice';
 
 const authConfig = {
   key: 'rememberedAccounts',
   storage,
-}
+};
 
 const rootReducer = {
   chat: chatReducer,
@@ -28,7 +28,7 @@ const rootReducer = {
   user: userReducer,
   auth: persistReducer(authConfig, authReducer),
   common: commonReducer,
-}
+};
 
 const store = configureStore({
   reducer: rootReducer,
@@ -37,6 +37,6 @@ const store = configureStore({
       ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
     },
   }),
-})
+});
 
-export default store
+export default store;
