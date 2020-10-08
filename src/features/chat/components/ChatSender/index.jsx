@@ -1,8 +1,9 @@
 import { SendOutlined, SmileOutlined } from '@ant-design/icons';
 import { Button, Input, Popover } from 'antd';
-import { Picker } from 'emoji-mart';
+import { NimblePicker } from 'emoji-mart';
+import data from 'emoji-mart/data/facebook.json';
 import PropTypes from 'prop-types';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import './ChatSender.scss';
 
 function ChatSender({ handleSendMessage }) {
@@ -33,6 +34,24 @@ function ChatSender({ handleSendMessage }) {
     setVisible(value);
   };
 
+  const renderPicker = useCallback(() => {
+    return (
+      <NimblePicker
+        set="facebook"
+        data={data}
+        title=""
+        emoji=""
+        include={['search', 'recent', 'people']}
+        color="var(--primary)"
+        showPreview={false}
+        showSkinTones={false}
+        perLine={6}
+        sheetSize={16}
+        onSelect={(emoji) => chooseEmoji(emoji.native)}
+      />
+    );
+  }, []);
+
   return (
     <div className="chat__sender">
       <form className="chat-form" onSubmit={sendMessage}>
@@ -42,23 +61,10 @@ function ChatSender({ handleSendMessage }) {
             value={message}
             onChange={changeMessage}
             ref={inputRef}
-            autoFocus
             autoComplete="off"
           />
           <Popover
-            content={
-              <Picker
-                set="facebook"
-                title=""
-                emoji=""
-                color="var(--primary)"
-                showPreview={false}
-                showSkinTones={false}
-                perLine={6}
-                sheetSize={20}
-                onSelect={(emoji) => chooseEmoji(emoji.native)}
-              />
-            }
+            content={renderPicker}
             trigger="click"
             visible={visible}
             onVisibleChange={handleVisibleChange}

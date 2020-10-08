@@ -34,7 +34,15 @@
   }
 
   &__name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+
     font-size: 13px;
     letter-spacing: -0.5px;
+    word-break: break-word;
   }
 }

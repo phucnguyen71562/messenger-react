@@ -2,6 +2,10 @@
 
 Built with: React, Redux, Redux toolkit, Antd
 
+## Demo
+
+[https://messenger-react.vercel.app](https://messenger-react.vercel.app)
+
 ## Available Scripts
 
 In the project directory, you can run:
