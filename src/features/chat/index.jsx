@@ -1,4 +1,5 @@
 import { unwrapResult } from '@reduxjs/toolkit';
+import useFullHeight from 'hooks/useFullHeight';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
@@ -39,6 +40,7 @@ function Chat() {
   const match = useRouteMatch();
   const dispatch = useDispatch();
   const socket = useSocket();
+  const height = useFullHeight();
 
   useEffect(() => {
     const getChats = async () => {
@@ -75,7 +77,7 @@ function Chat() {
   }, [dispatch, user.id, socket]);
 
   return (
-    <div className="chat">
+    <div className="chat" style={{ height: height ? `${height}px` : '100vh' }}>
       {isDesktopMode && <ChatSidebar />}
 
       <Switch>

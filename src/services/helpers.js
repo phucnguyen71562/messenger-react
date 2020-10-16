@@ -1,16 +1,16 @@
-import moment from 'moment';
-import 'moment/locale/vi';
+import dayjs from 'dayjs';
+import 'dayjs/locale/vi';
 
 function changeLocale(value = 'vi') {
-  moment.locale(value);
+  dayjs.locale(value);
 }
 
 export function getRelativeTime(value) {
   changeLocale();
-  return moment(value).fromNow();
+  return dayjs(value).isBefore(dayjs());
 }
 
 export function getTime(value) {
   changeLocale();
-  return moment(value).format('dd, D/M, h:mm');
+  return dayjs(value).format('dd, D/M, h:mm');
 }
