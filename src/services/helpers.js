@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 function changeLocale(value = 'vi') {
   dayjs.locale(value);
@@ -7,7 +8,8 @@ function changeLocale(value = 'vi') {
 
 export function getRelativeTime(value) {
   changeLocale();
-  return dayjs(value).isBefore(dayjs());
+  dayjs.extend(relativeTime);
+  return dayjs(value).fromNow();
 }
 
 export function getTime(value) {

@@ -7,14 +7,14 @@ import { useHistory } from 'react-router-dom';
 import { logoutUser } from '../../app/authSlice';
 
 function LogoutButton(props) {
-  const { id } = useSelector((state) => state.auth.current);
+  const { refresh_token } = useSelector((state) => state.auth.current);
 
   const dispatch = useDispatch();
   const history = useHistory();
 
   const handleLogout = async () => {
     const params = {
-      id,
+      token: refresh_token,
     };
 
     await authApi.logout(params);
