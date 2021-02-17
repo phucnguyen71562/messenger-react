@@ -1,7 +1,7 @@
 .friends__online {
   display: none;
 
-  @media screen and (min-width: 991px) {
+  @media screen and (min-width: 62em) {
     display: flex;
     flex-direction: column;
   }

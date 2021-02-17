@@ -3,8 +3,30 @@ import { Button, Input, Popover } from 'antd';
 import { NimblePicker } from 'emoji-mart';
 import data from 'emoji-mart/data/facebook.json';
 import PropTypes from 'prop-types';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import './ChatSender.scss';
+
+const propTypes = {
+  handleSendMessage: PropTypes.func.isRequired,
+};
+
+const renderPicker = (chooseEmoji) => {
+  return (
+    <NimblePicker
+      set="facebook"
+      data={data}
+      title=""
+      emoji=""
+      include={['search', 'recent', 'people']}
+      color="var(--primary)"
+      showPreview={false}
+      showSkinTones={false}
+      perLine={6}
+      sheetSize={16}
+      onSelect={(emoji) => chooseEmoji(emoji.native)}
+    />
+  );
+};
 
 function ChatSender({ handleSendMessage }) {
   const [message, setMessage] = useState('');
@@ -28,29 +50,12 @@ function ChatSender({ handleSendMessage }) {
     setMessage((preMessage) => preMessage + value);
 
     setVisible(false);
+    inputRef.current.focus();
   };
 
   const handleVisibleChange = (value) => {
     setVisible(value);
   };
-
-  const renderPicker = useCallback(() => {
-    return (
-      <NimblePicker
-        set="facebook"
-        data={data}
-        title=""
-        emoji=""
-        include={['search', 'recent', 'people']}
-        color="var(--primary)"
-        showPreview={false}
-        showSkinTones={false}
-        perLine={6}
-        sheetSize={16}
-        onSelect={(emoji) => chooseEmoji(emoji.native)}
-      />
-    );
-  }, []);
 
   return (
     <div className="chat__sender">
@@ -64,12 +69,10 @@ function ChatSender({ handleSendMessage }) {
             autoComplete="off"
           />
           <Popover
-            content={renderPicker}
+            content={renderPicker(chooseEmoji)}
             trigger="click"
             visible={visible}
             onVisibleChange={handleVisibleChange}
-            mouseEnterDelay={0}
-            mouseLeaveDelay={0}
           >
             <Button shape="circle" icon={<SmileOutlined />} type="ghost" />
           </Popover>
@@ -85,8 +88,6 @@ function ChatSender({ handleSendMessage }) {
   );
 }
 
-ChatSender.propTypes = {
-  handleSendMessage: PropTypes.func.isRequired,
-};
+ChatSender.propTypes = propTypes;
 
 export default ChatSender;

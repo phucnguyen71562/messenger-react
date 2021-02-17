@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import LoginForm from '../../components/LoginForm';
 import RegistrationForm from '../../components/RegistrationForm';
+import './Login.scss';
 
 function Login() {
   const [form] = Form.useForm();
@@ -42,7 +43,7 @@ function Login() {
   };
 
   return (
-    <>
+    <div className="login">
       <LoginForm
         handleLoginSuccess={handleLoginSuccess}
         handleLoginFailed={handleLoginFailed}
@@ -56,7 +57,7 @@ function Login() {
         onSignup={onSignup}
         onCancel={() => setVisible(false)}
       />
-    </>
+    </div>
   );
 }
 

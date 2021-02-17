@@ -1,8 +1,8 @@
 import { EllipsisOutlined, UserDeleteOutlined } from '@ant-design/icons';
 import { Avatar, Button, Dropdown, List, Menu, Modal, Typography } from 'antd';
-import { selectIsDesktopMode } from 'app/commonSlice';
 import { AVATAR_DEFAULT } from 'configs/common';
 import { selectFriends } from 'features/friend/friendSlice';
+import useMediaQuery from 'hooks/useMediaQuery';
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
@@ -13,8 +13,8 @@ const { Text } = Typography;
 const { confirm } = Modal;
 
 function FriendList({ deleteFriends, handleDeleteFriend }) {
+  const isDesktopMode = useMediaQuery('(min-width: 62em)');
   const friends = useSelector(selectFriends);
-  const isDesktopMode = useSelector(selectIsDesktopMode);
 
   const isDeleted = (id) => deleteFriends.includes(id);
 

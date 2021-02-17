@@ -1,22 +1,22 @@
 import { ArrowLeftOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { Avatar, Button, Typography } from 'antd';
-import { selectIsDesktopMode } from 'app/commonSlice';
 import { selectReceiver } from 'features/chat/chatSlice';
 import { selectOnlineFriends } from 'features/friend/friendSlice';
+import useMediaQuery from 'hooks/useMediaQuery';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { AVATAR_DEFAULT } from '../../../../configs/common';
-import { getRelativeTime } from '../../../../services/helpers';
+import { getRelativeTime } from '../../../../utils/day';
 import './ChatHeader.scss';
 
 const { Title, Text } = Typography;
 
 function ChatHeader({ setVisible }) {
+  const isDesktopMode = useMediaQuery('(min-width: 62em)');
   const onlineFriends = useSelector(selectOnlineFriends);
   const receiver = useSelector(selectReceiver);
-  const isDesktopMode = useSelector(selectIsDesktopMode);
   const history = useHistory();
 
   const isOnline = onlineFriends.includes(receiver?.id);
@@ -35,7 +35,7 @@ function ChatHeader({ setVisible }) {
       <Avatar size="large" icon={AVATAR_DEFAULT} src={receiver.photoUrl} />
       <div className="chat__headerInfo">
         <Title level={4} style={{ marginBottom: 0 }}>
-          {receiver?.username}
+          {receiver?.first_name} {receiver?.last_name}
         </Title>
         <Text type="secondary">
           {isOnline ? 'Đang hoạt động' : getRelativeTime(receiver?.lastLogin)}

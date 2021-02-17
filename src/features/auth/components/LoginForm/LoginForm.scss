@@ -1,39 +1,109 @@
-.login-form {
-  display: grid;
-  place-items: center;
-  min-height: 100vh;
-
-  background: #f1f2f3;
-
-  & > form {
+.login {
+  &__container {
     display: flex;
-    justify-content: center;
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  }
+
+  &__form {
+    display: flex;
     flex-direction: column;
 
-    width: 300px;
-    max-width: 300px;
-    padding: 24px 16px;
+    width: 400px;
+    max-width: 400px;
+    min-height: 350px;
 
-    border-radius: 4px;
+    padding: 3rem !important;
+
     background: var(--white);
-    box-shadow: 0px 3px 7px -7px rgba(0, 0, 0, 0.75);
   }
+}
 
-  &__logo {
-    text-align: center;
-    color: var(--black);
-    font-weight: 500;
-    font-size: 40px;
-    margin-bottom: 20px;
+.login_reg_separator {
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 1rem;
 
-    & > img {
-      object-fit: contain;
-      height: 80px;
-      margin-bottom: 40px;
+  text-align: center;
+  white-space: nowrap;
+
+  & > span {
+    position: relative;
+
+    display: inline-block;
+
+    color: #4b4f56;
+
+    &::before,
+    &::after {
+      content: '';
+
+      position: absolute;
+      top: 50%;
+
+      width: 9999px;
+      height: 1px;
+
+      background: #ccd0d5;
+    }
+
+    &::before {
+      right: 100%;
+      margin-right: 15px;
+    }
+
+    &::after {
+      left: 100%;
+      margin-left: 15px;
     }
   }
+}
 
-  &__button {
-    align-self: center;
+.login__right-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  row-gap: 1rem;
+
+  width: 350px;
+  max-width: 350px;
+  padding: 3rem !important;
+
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+
+  & > h2 {
+    margin-bottom: 0.5rem !important;
+
+    font-size: 1.75rem !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+    text-align: center;
+
+    color: var(--white) !important;
+  }
+
+  & > span {
+    margin-bottom: 1rem !important;
+
+    color: var(--white) !important;
+  }
+
+  & > button {
+    background-color: transparent !important;
+
+    color: var(--white) !important;
+
+    &:hover {
+      border-color: var(--white);
+
+      background-color: var(--white) !important;
+
+      color: var(--primary) !important;
+    }
   }
 }

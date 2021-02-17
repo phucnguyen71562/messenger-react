@@ -1,46 +1,23 @@
 import { unwrapResult } from '@reduxjs/toolkit';
-import useFullHeight from 'hooks/useFullHeight';
+import { selectCurrent } from 'app/authSlice';
+import useMediaQuery from 'hooks/useMediaQuery';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import chatApi from '../../apis/chatApi';
 import userApi from '../../apis/userApi';
 import { useSocket } from '../../contexts/SocketProvider';
 import './Chat.scss';
-import { createChat, deleteChat, fetchChats } from './chatSlice';
-import ChatFriendOnline from './components/ChatFriendOnline';
-import ChatSidebarHeader from './components/ChatSidebarHeader';
-import ChatSidebarList from './components/ChatSidebarList';
-import ChatSidebarSearch from './components/ChatSidebarSearch';
+import { createChat, fetchChats } from './chatSlice';
+import ChatSidebar from './components/ChatSidebar';
 import MessagePage from './pages/MessagePage';
 import NewChatPage from './pages/NewChatPage';
 
-function ChatSidebar() {
-  const isDesktopMode = useSelector((state) => state.common.isDesktopMode);
-  const dispatch = useDispatch();
-
-  const handleDeleteChat = (value) => {
-    chatApi.deleteChat(value);
-    dispatch(deleteChat(value));
-  };
-
-  return (
-    <div className="chat__sidebar">
-      <ChatSidebarHeader />
-      <ChatSidebarSearch />
-      {!isDesktopMode && <ChatFriendOnline />}
-      <ChatSidebarList handleDeleteChat={handleDeleteChat} />
-    </div>
-  );
-}
-
 function Chat() {
-  const isDesktopMode = useSelector((state) => state.common.isDesktopMode);
-  const user = useSelector((state) => state.auth.current);
+  const isDesktopMode = useMediaQuery('(min-width: 62em)');
+  const user = useSelector(selectCurrent);
   const match = useRouteMatch();
   const dispatch = useDispatch();
   const socket = useSocket();
-  const height = useFullHeight();
 
   useEffect(() => {
     const getChats = async () => {
@@ -77,7 +54,7 @@ function Chat() {
   }, [dispatch, user.id, socket]);
 
   return (
-    <div className="chat" style={{ height: height ? `${height}px` : '100vh' }}>
+    <div className="chat">
       {isDesktopMode && <ChatSidebar />}
 
       <Switch>

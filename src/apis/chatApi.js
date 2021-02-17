@@ -1,19 +1,19 @@
-import axiosClient from './axiosClient';
+import { clientAxios } from 'services/httpService';
 
 const chatApi = {
   fetchChats: () => {
     const url = '/chats';
-    return axiosClient.get(url);
+    return clientAxios.get(url);
   },
 
   fetchMessages: ({ id, ...params }) => {
     const url = `/chats/${id}`;
-    return axiosClient.get(url, { params });
+    return clientAxios.get(url, { params });
   },
 
   deleteChat: (params) => {
     const url = `/chats/${params}`;
-    return axiosClient.delete(url);
+    return clientAxios.delete(url);
   },
 };
 

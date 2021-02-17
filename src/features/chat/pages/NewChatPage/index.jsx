@@ -1,8 +1,8 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { AutoComplete, Avatar, Button } from 'antd';
-import { selectIsDesktopMode } from 'app/commonSlice';
 import { AVATAR_DEFAULT } from 'configs/common';
 import { selectFriends } from 'features/friend/friendSlice';
+import useMediaQuery from 'hooks/useMediaQuery';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
@@ -23,8 +23,8 @@ const renderItem = (data) => {
 };
 
 function NewChatPage() {
+  const isDesktopMode = useMediaQuery('(min-width: 62em)');
   const friends = useSelector(selectFriends);
-  const isDesktopMode = useSelector(selectIsDesktopMode);
   const [options, setOptions] = useState([]);
   const history = useHistory();
 

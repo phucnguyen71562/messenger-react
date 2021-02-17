@@ -1,9 +1,9 @@
-import axiosClient from './axiosClient';
+import { clientAxios } from 'services/httpService';
 
 const uploadApi = {
   uploadAvatar: (params) => {
     const url = `/storages/avatars`;
-    return axiosClient.post(url, params);
+    return clientAxios.post(url, params);
   },
 };
 

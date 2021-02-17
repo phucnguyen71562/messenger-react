@@ -10,10 +10,16 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import './FriendHeader.scss';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
+
+const propTypes = {
+  handleUploadPhoto: PropTypes.func.isRequired,
+};
 
 function FriendHeader({ handleUploadPhoto }) {
-  const { username, photoUrl } = useSelector(selectCurrent);
+  const { first_name, last_name, username, photoUrl } = useSelector(
+    selectCurrent
+  );
 
   function beforeUpload(file) {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -40,20 +46,22 @@ function FriendHeader({ handleUploadPhoto }) {
           listType="picture-card"
           showUploadList={false}
           beforeUpload={beforeUpload}
-          className="friends__headerUpload"
+          className="friends__header-upload"
         >
           <Avatar
             size={128}
             icon={AVATAR_DEFAULT}
             src={photoUrl}
-            className="friends__headerAvatar"
+            className="friends__header-avatar"
           />
         </Upload>
       </ImgCrop>
 
-      <Title level={4} className="friends__headerName">
-        {username}
+      <Title level={4} className="friends__header-name">
+        {first_name} {last_name}
       </Title>
+
+      <Text type="secondary">@{username}</Text>
 
       <Link to="/messages">
         <Button
@@ -69,8 +77,6 @@ function FriendHeader({ handleUploadPhoto }) {
   );
 }
 
-FriendHeader.propTypes = {
-  handleUploadPhoto: PropTypes.func.isRequired,
-};
+FriendHeader.propTypes = propTypes;
 
 export default FriendHeader;

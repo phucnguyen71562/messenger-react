@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ChatView from 'react-chatview';
 import { useSelector } from 'react-redux';
-import { getTime } from 'services/helpers';
+import { getTime } from 'utils/day';
 import './ChatMessages.scss';
 
 function ChatMessages({ handleLoadMoreMessages, hasMore, loading }) {

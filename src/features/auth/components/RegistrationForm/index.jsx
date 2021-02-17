@@ -1,59 +1,31 @@
-import { DatePicker, Form, Input, Modal, Radio } from 'antd';
+import { Form, Input, Modal, Radio } from 'antd';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
-import authApi from '../../../../apis/authApi';
+import React from 'react';
+import DatePicker from '../../../../components/DatePicker';
 import './RegistrationForm.scss';
+import RULES, { disabledDate } from './validation';
 
-const formItemLayout = {
-  labelCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 8,
-    },
-  },
-  wrapperCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 16,
-    },
-  },
-};
-
-const validateUsername = async (value) => {
-  const { isAvailable } = await authApi.validateUsernameAvailability(value);
-
-  if (isAvailable) {
-    return {
-      validateStatus: 'error',
-      errorMsg: 'Tên đăng nhập đã tồn tại!',
-    };
-  }
-
-  return {
-    validateStatus: 'success',
-    errorMsg: null,
-  };
+const propTypes = {
+  form: PropTypes.object.isRequired,
+  visible: PropTypes.bool.isRequired,
+  onSignup: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
 function RegistrationForm({ form, visible, onSignup, onCancel }) {
-  const [validate, setValidate] = useState({});
-
-  const handleCheckUsername = async (e) => {
-    if (e.target.value.length > 5) {
-      const value = await validateUsername({ username: e.target.value });
-      setValidate(value);
-    }
-  };
-
-  const handleValidationMessage = () => {
-    setValidate({
-      ...validate,
-      errorMsg: null,
-    });
+  const handleOk = () => {
+    form
+      .validateFields()
+      .then((fieldsValue) => {
+        const values = {
+          ...fieldsValue,
+          birthday: fieldsValue.birthday.format('YYYY-MM-DD'),
+        };
+        onSignup(values);
+      })
+      .catch((info) => {
+        console.error('Validate Failed:', info);
+      });
   };
 
   return (
@@ -63,54 +35,51 @@ function RegistrationForm({ form, visible, onSignup, onCancel }) {
       okText="Đăng ký"
       cancelText="Hủy"
       onCancel={onCancel}
-      onOk={() => {
-        form
-          .validateFields()
-          .then((fieldsValue) => {
-            const values = {
-              ...fieldsValue,
-              birthday: fieldsValue.birthday.format('YYYY-MM-DD'),
-            };
-            onSignup(values);
-            setValidate({
-              validateStatus: '',
-              errorMsg: null,
-            });
-          })
-          .catch((info) => {
-            console.log('Validate Failed:', info);
-          });
-      }}
+      onOk={handleOk}
     >
       <Form
-        {...formItemLayout}
+        layout="vertical"
         form={form}
         name="register"
         scrollToFirstError
         className="registration-form"
       >
+        <Form.Item style={{ marginBottom: 0 }}>
+          <Form.Item
+            name="last_name"
+            label="Họ"
+            validateFirst
+            hasFeedback
+            rules={RULES.last_name}
+            style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            name="first_name"
+            label="Tên"
+            validateFirst
+            hasFeedback
+            rules={RULES.first_name}
+            style={{
+              display: 'inline-block',
+              width: 'calc(50% - 8px)',
+              margin: '0 8px',
+            }}
+          >
+            <Input />
+          </Form.Item>
+        </Form.Item>
+
         <Form.Item
           name="username"
           label="Tên đăng nhập"
           validateFirst
           hasFeedback
-          rules={[
-            {
-              required: true,
-              message: 'Vui lòng nhập tên đăng nhập!',
-            },
-            {
-              min: 6,
-              message: 'Tên đăng nhập ít nhất 6 ký tự!',
-            },
-          ]}
-          validateStatus={validate.validateStatus}
-          help={validate.errorMsg}
+          rules={RULES.username}
         >
-          <Input
-            onBlur={handleCheckUsername}
-            onFocus={handleValidationMessage}
-          />
+          <Input />
         </Form.Item>
 
         <Form.Item
@@ -118,70 +87,30 @@ function RegistrationForm({ form, visible, onSignup, onCancel }) {
           label="Mật khẩu"
           validateFirst
           hasFeedback
-          rules={[
-            {
-              required: true,
-              message: 'Vui lòng nhập mật khẩu!',
-            },
-            {
-              min: 6,
-              message: 'Mật khẩu tối thiểu 6 ký tự!',
-            },
-          ]}
+          rules={RULES.password}
         >
           <Input.Password />
         </Form.Item>
 
         <Form.Item
-          name="confirm"
+          name="confirm_password"
           label="Xác nhận mật khẩu"
           dependencies={['password']}
           validateFirst
           hasFeedback
-          rules={[
-            {
-              required: true,
-              message: 'Vui lòng xác nhận mật khẩu!',
-            },
-            ({ getFieldValue }) => ({
-              validator(rule, value) {
-                if (!value || getFieldValue('password') === value) {
-                  return Promise.resolve();
-                }
-
-                return Promise.reject('Mật khẩu xác nhận không khớp!');
-              },
-            }),
-          ]}
+          rules={RULES.confirm_password}
         >
           <Input.Password />
         </Form.Item>
 
-        <Form.Item
-          name="birthday"
-          label="Ngày sinh"
-          rules={[
-            {
-              type: 'object',
-              required: true,
-              message: 'Vui lòng chọn ngày sinh!',
-            },
-          ]}
-        >
-          <DatePicker placeholder="Chọn ngày sinh" />
+        <Form.Item name="birthday" label="Ngày sinh" rules={RULES.birthday}>
+          <DatePicker
+            disabledDate={disabledDate}
+            placeholder="Chọn ngày sinh"
+          />
         </Form.Item>
 
-        <Form.Item
-          name="gender"
-          label="Giới tính"
-          rules={[
-            {
-              type: 'boolean',
-              required: true,
-              message: 'Vui lòng chọn giới tính!',
-            },
-          ]}
-        >
+        <Form.Item name="gender" label="Giới tính" rules={RULES.gender}>
           <Radio.Group>
             <Radio value>Nam</Radio>
             <Radio value={false}>Nữ</Radio>
@@ -192,11 +121,6 @@ function RegistrationForm({ form, visible, onSignup, onCancel }) {
   );
 }
 
-RegistrationForm.propTypes = {
-  form: PropTypes.object.isRequired,
-  visible: PropTypes.bool.isRequired,
-  onSignup: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-};
+RegistrationForm.propTypes = propTypes;
 
 export default RegistrationForm;

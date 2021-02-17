@@ -1,9 +1,9 @@
 import { CloseCircleOutlined, EllipsisOutlined } from '@ant-design/icons';
 import { Avatar, Button, Dropdown, List, Menu, Modal, Typography } from 'antd';
 import { selectCurrent } from 'app/authSlice';
-import { selectIsDesktopMode } from 'app/commonSlice';
 import { AVATAR_DEFAULT } from 'configs/common';
 import { selectReceiver } from 'features/chat/chatSlice';
+import useMediaQuery from 'hooks/useMediaQuery';
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
@@ -15,10 +15,10 @@ const { Paragraph } = Typography;
 const { confirm } = Modal;
 
 function ChatSidebarItem({ item, handleDeleteChat }) {
+  const isDesktopMode = useMediaQuery('(min-width: 62em)');
   const user = useSelector(selectCurrent);
   const chatReceiver = useSelector(selectReceiver);
   const isSearchFriend = useSelector(selectIsSearchFriend);
-  const isDesktopMode = useSelector(selectIsDesktopMode);
 
   const history = useHistory();
 
@@ -85,7 +85,7 @@ function ChatSidebarItem({ item, handleDeleteChat }) {
                 src={receiver.photoUrl}
               />
             }
-            title={receiver.username}
+            title={`${receiver.first_name} ${receiver.last_name}`}
             description={
               <Paragraph ellipsis>
                 {lastMessage?.username === user.username && 'Bạn: '}
@@ -105,7 +105,7 @@ function ChatSidebarItem({ item, handleDeleteChat }) {
           avatar={
             <Avatar size="large" icon={AVATAR_DEFAULT} src={item.photoUrl} />
           }
-          title={item.username}
+          title={`${item.first_name} ${item.last_name}`}
         />
       </List.Item>
     </Link>
@@ -119,6 +119,8 @@ ChatSidebarItem.propTypes = {
     id: PropTypes.string,
     photoUrl: PropTypes.string,
     username: PropTypes.string,
+    first_name: PropTypes.string,
+    last_name: PropTypes.string,
   }).isRequired,
   handleDeleteChat: PropTypes.func.isRequired,
 };

@@ -15,7 +15,7 @@ import { selectOnlineFriends } from 'features/friend/friendSlice';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getRelativeTime } from 'services/helpers';
+import { getRelativeTime } from 'utils/day';
 import './ChatSettings.scss';
 
 const { Title, Text } = Typography;
@@ -58,7 +58,7 @@ function ChatSettings({ visible, setVisible, handleChangeTheme }) {
       <div className="chat__settingsTitle">
         <Avatar icon={AVATAR_DEFAULT} src={receiver.photoUrl} size={64} />
         <Title level={2} style={{ marginTop: 16 }}>
-          {receiver?.username}
+          {receiver?.first_name} {receiver?.last_name}
         </Title>
         <Text type="secondary">
           {isOnline ? 'Đang hoạt động' : getRelativeTime(receiver?.lastLogin)}

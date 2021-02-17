@@ -1,12 +1,16 @@
 @import '~antd/dist/antd.css';
 @import '~emoji-mart/css/emoji-mart.css';
-@import './assets/css/variable';
+@import './variable';
 
 .loading {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+}
+
+#root {
+  height: 100%;
 }
 
 .ant-typography h5,

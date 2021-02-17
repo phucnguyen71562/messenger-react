@@ -11,7 +11,7 @@
 
   padding: 15px;
   margin: auto;
-  padding-top: 100px;
+  padding-top: 140px;
   margin-top: 64px;
   margin-bottom: 30px;
 
@@ -24,7 +24,7 @@
 .friends__content {
   flex: 1;
 
-  @media screen and (min-width: 991px) {
+  @media screen and (min-width: 62em) {
     display: flex;
   }
 }
@@ -32,7 +32,7 @@
 .friends__sidebar {
   flex: 1;
 
-  @media screen and (min-width: 991px) {
+  @media screen and (min-width: 62em) {
     flex: 0.3;
     padding-right: 10px;
   }
@@ -41,7 +41,7 @@
 .friends__body {
   flex: 1;
 
-  @media screen and (min-width: 991px) {
+  @media screen and (min-width: 62em) {
     flex: 0.7;
     padding-left: 10px;
   }

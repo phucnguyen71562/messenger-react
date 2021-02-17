@@ -1,0 +1,15 @@
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+
+  padding: 0 1rem;
+  overflow: hidden;
+
+  background: linear-gradient(180deg, #0055ff 0%, rgb(0, 153, 255) 100%);
+
+  @media screen and (min-width: 62em) {
+    padding: 0;
+  }
+}

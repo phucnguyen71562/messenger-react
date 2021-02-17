@@ -1,7 +1,7 @@
 import { Divider, Tabs } from 'antd';
-import { selectIsDesktopMode } from 'app/commonSlice';
+import useMediaQuery from 'hooks/useMediaQuery';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import friendApi from '../../apis/friendApi';
 import uploadApi from '../../apis/uploadApi';
 import userApi from '../../apis/userApi';
@@ -18,7 +18,7 @@ import { addFriend } from './friendSlice';
 const { TabPane } = Tabs;
 
 function Friend() {
-  const isDesktopMode = useSelector(selectIsDesktopMode);
+  const isDesktopMode = useMediaQuery('(min-width: 62em)');
 
   const [searchData, setSearchData] = useState([]);
   const [sentRequests, setSentRequests] = useState([]);

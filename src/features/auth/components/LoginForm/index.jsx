@@ -1,11 +1,19 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Divider, Form, Input, Typography } from 'antd';
-import LoginImage from 'assets/images/logo.png';
+import { Button, Form, Input, Typography } from 'antd';
+import useMediaQuery from 'hooks/useMediaQuery';
 import PropTypes from 'prop-types';
 import React from 'react';
 import './LoginForm.scss';
+import RULES from './validation';
 
-const { Text } = Typography;
+const { Title, Text } = Typography;
+
+const propTypes = {
+  handleLoginSuccess: PropTypes.func.isRequired,
+  handleLoginFailed: PropTypes.func.isRequired,
+  submitting: PropTypes.bool.isRequired,
+  openRegistrationForm: PropTypes.func.isRequired,
+};
 
 function LoginForm({
   handleLoginSuccess,
@@ -13,70 +21,73 @@ function LoginForm({
   submitting,
   openRegistrationForm,
 }) {
-  return (
-    <div className="login-form">
-      <Form
-        name="login"
-        onFinish={handleLoginSuccess}
-        onFinishFailed={handleLoginFailed}
-      >
-        <div className="login-form__logo">
-          L<img src={LoginImage} alt="login" />
-          gin
-        </div>
+  const isDesktopMode = useMediaQuery('(min-width: 62em)');
 
-        <Form.Item
-          name="username"
-          rules={[
-            {
-              required: true,
-              message: 'Vui lòng nhập tên đăng nhập!',
-            },
-          ]}
-        >
-          <Input prefix={<UserOutlined />} placeholder="Tên đăng nhập" />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: 'Vui lòng nhập mật khẩu!',
-            },
-          ]}
-        >
-          <Input.Password prefix={<LockOutlined />} placeholder="Mật khẩu" />
-        </Form.Item>
-        <Button
-          type="primary"
-          shape="round"
-          htmlType="submit"
-          className="login-form__button"
-          loading={submitting}
-        >
-          Đăng nhập
-        </Button>
-        <Divider />
-        <Text type="secondary" style={{ textAlign: 'center', marginBottom: 8 }}>
-          hoặc
+  return (
+    <div className="login__container">
+      <div className="login__form">
+        <Title>Đăng nhập</Title>
+        <Text type="secondary" style={{ marginBottom: '3rem' }}>
+          Đăng nhập vào tài khoản của bạn
         </Text>
-        <Button
-          type="default"
-          onClick={openRegistrationForm}
-          className="login-form__button"
+
+        <Form
+          name="login"
+          onFinish={handleLoginSuccess}
+          onFinishFailed={handleLoginFailed}
         >
-          Đăng ký ngay
-        </Button>
-      </Form>
+          <Form.Item name="username" rules={RULES.username}>
+            <Input
+              prefix={<UserOutlined style={{ marginRight: '0.5rem' }} />}
+              placeholder="Tên đăng nhập"
+            />
+          </Form.Item>
+          <Form.Item name="password" rules={RULES.password}>
+            <Input.Password
+              prefix={<LockOutlined style={{ marginRight: '0.5rem' }} />}
+              placeholder="Mật khẩu"
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={submitting}
+              block={!isDesktopMode}
+            >
+              Đăng nhập
+            </Button>
+          </Form.Item>
+        </Form>
+
+        {!isDesktopMode && (
+          <>
+            <div className="login_reg_separator">
+              <span>hoặc</span>
+            </div>
+            <Button
+              onClick={openRegistrationForm}
+              style={{ alignSelf: 'center' }}
+            >
+              Tạo tài khoản mới
+            </Button>
+          </>
+        )}
+      </div>
+
+      {isDesktopMode && (
+        <div className="login__right-panel">
+          <Title level={2}>Tạo tài khoản mới</Title>
+          <Text>Chưa có tài khoản ?</Text>
+          <Button shape="round" onClick={openRegistrationForm}>
+            Đăng ký ngay
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
 
-LoginForm.propTypes = {
-  handleLoginSuccess: PropTypes.func.isRequired,
-  handleLoginFailed: PropTypes.func.isRequired,
-  submitting: PropTypes.bool.isRequired,
-  openRegistrationForm: PropTypes.func.isRequired,
-};
+LoginForm.propTypes = propTypes;
 
 export default LoginForm;

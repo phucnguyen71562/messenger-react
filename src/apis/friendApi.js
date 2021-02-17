@@ -1,29 +1,29 @@
-import axiosClient from './axiosClient';
+import { clientAxios } from 'services/httpService';
 
 const friendApi = {
   fetchFriends: () => {
     const url = `/friends`;
-    return axiosClient.get(url);
+    return clientAxios.get(url);
   },
 
   fetchFriendRequests: () => {
     const url = `/friends/requests`;
-    return axiosClient.get(url);
+    return clientAxios.get(url);
   },
 
   addFriend: (params) => {
     const url = `/friends`;
-    return axiosClient.post(url, { params });
+    return clientAxios.post(url, { params });
   },
 
   deleteFriend: (params) => {
     const url = `/friends/${params}`;
-    return axiosClient.delete(url);
+    return clientAxios.delete(url);
   },
 
   deleteFriendRequest: (params) => {
     const url = `/friends/requests/${params}`;
-    return axiosClient.delete(url);
+    return clientAxios.delete(url);
   },
 };
 
